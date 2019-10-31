@@ -80,10 +80,6 @@ class Bigram:
             
             print("1.Hesablama: \nBigram modelde adi ehtimalin hesablamasinda Test data sebebinden sifira bolme yoxdur")
             
-           
-        
-
-
 
     def bigram_word_prob_smth(self,pairs,words):
         self.probability_of_words_bigram_smth=1
@@ -103,9 +99,6 @@ class Bigram:
                 self.probability_of_bigram=(n+1)/(d+self.corpus_length_unigram)
                 self.probability_of_words_bigram_smth*=self.probability_of_bigram
         
-        
-        # print(self.probability_of_bigram)
-
         print("2. Hesablama: Smoothed\nP =",self.probability_of_words_bigram_smth)
 
 obj_bi=Bigram()

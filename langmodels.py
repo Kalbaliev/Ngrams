@@ -12,7 +12,7 @@ class Unigram:
 
         #OPEN FILES TRAIN AND TEST
         self.text=self.openfile("train.txt")
-        self.test_text=self.openfile("test2.txt")
+        self.test_text=self.openfile("test1.txt")
         
 
         self.unigram_fr=Counter(list(self.unigram_frequency()))
@@ -43,19 +43,22 @@ class Unigram:
         self.probability_of_words_unigram=1
         
         for word in self.test_words:
-            self.unigram_numerator=self.unigram_fr.get(word,0)
-            self.unigram_dominator=self.corpus_length_unigram #is ist correct ?
-            self.probability_of_word_unigram=(self.unigram_numerator/self.unigram_dominator)
-            self.probability_of_words_unigram*=self.probability_of_word_unigram
+            if(word!='<s>' and word!='</s>'):
+                self.unigram_numerator=self.unigram_fr.get(word,0)
+                self.unigram_dominator=self.corpus_length_unigram #is ist correct ?
+                self.probability_of_word_unigram=(self.unigram_numerator/self.unigram_dominator)
+                self.probability_of_words_unigram*=self.probability_of_word_unigram
+
         return self.probability_of_words_unigram
 
     def unigram_word_prob_smth(self):
         self.probability_of_words_unigram_smth=1
         for word in self.test_words:
-            self.unigram_numerator_smth=self.unigram_fr.get(word,0)+1 
-            self.unigram_dominator_smth=(self.corpus_length_unigram*2)-2  #is it correct ? 
-            self.probability_of_unigram_smth=(self.unigram_numerator_smth/self.unigram_dominator_smth)
-            self.probability_of_words_unigram_smth*=self.probability_of_unigram_smth
+            if(word!='<s>' and word!='</s>'):
+                self.unigram_numerator_smth=self.unigram_fr.get(word,0)+1 
+                self.unigram_dominator_smth=(self.corpus_length_unigram*2)-2  #is it correct ? 
+                self.probability_of_unigram_smth=(self.unigram_numerator_smth/self.unigram_dominator_smth)
+                self.probability_of_words_unigram_smth*=self.probability_of_unigram_smth
         return self.probability_of_words_unigram_smth
 
     def perplexity_unigram(self):
@@ -180,7 +183,8 @@ class Bigram(Unigram):
 
        try:
            self.pp_bigram=int(math.pow(self.bigram_prob,(-1/self.bigram_fr_count)))
-       except ValueError:
+           
+       except (ValueError,TypeError):
            self.pp_bigram="ERROR"
 
         #    print("Ehtimal sifira beraber oldugu ucun quvvete yukseldimesi mumkun deyil!")
@@ -197,7 +201,7 @@ obj_bi=Bigram()
 print("")
 print("")
 print (colored("----------------------------------------------------------------",'yellow'))
-print (colored("--------------------- PROBABILITY","yellow"),colored("(UNIGRAM)","magenta"),colored("---------------------",'yellow'))
+print (colored("-------------------- PROBABILITY","yellow"),colored("(UNIGRAM)","magenta"),colored("---------------------",'yellow'))
 print (colored("----------------------------------------------------------------",'yellow'))
 
 prob_unigram=obj_bi.unigram_word_prob()
@@ -207,6 +211,16 @@ print(colored("P(unsmoothed) =","green"),colored(prob_unigram,"green"))
 print(colored("P(smoothed) =","green"),colored(prob_smth_unigram,"green"))
 
 
+print (colored("----------------------------------------------------------------",'yellow'))
+print (colored("-------------------- PERPLEXITY","yellow"),colored("(UNIGRAM)","magenta"),colored("----------------------",'yellow'))
+print (colored("----------------------------------------------------------------",'yellow'))
+pp_unigram=obj_bi.perplexity_unigram()[0]
+pp_unigram_smth=obj_bi.perplexity_unigram()[1]
+if(pp_unigram=="ERROR"):
+    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
+    print(colored("PP(unsmoothed) =","green"),colored("ERROR","red"),colored("\nPP(smoothed) =","green"),colored(pp_unigram_smth,"green"))
+else:
+    print(colored("PP(unsmoothed)=","green"),colored(pp_unigram,"green"),colored("\nPP(smoothed)=","green"),colored(pp_unigram_smth,"green"))
 
 
 
@@ -225,27 +239,18 @@ else:
    print(colored("P(smoothed) =","green"),colored(prob_smth_bigram,"green"))
 
 
-print (colored("----------------------------------------------------------------",'yellow'))
-print (colored("--------------------- PERPLEXITY","yellow"),colored("(UNIGRAM)","magenta"),colored("---------------------",'yellow'))
-print (colored("----------------------------------------------------------------",'yellow'))
-pp_unigram=obj_bi.perplexity_unigram()[0]
-pp_unigram_smth=obj_bi.perplexity_unigram()[1]
-if(pp_unigram=="ERROR"):
-    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
-    print(colored("PP(unsmoothed) =","green"),colored("ERROR","red"),colored("\nPP(smoothed) =","green"),colored(pp_unigram_smth,"green"))
-else:
-    print(colored("PP(unsmoothed)=","green"),colored(pp_unigram,"green"),colored("\nPP(smoothed)=","green"),colored(pp_unigram_smth,"green"))
 
 
 
 
 print (colored("----------------------------------------------------------------",'yellow'))
-print (colored("--------------------- PERPLEXITY","yellow"),colored("(BIGRAM)","magenta"),colored("---------------------",'yellow'))
+print (colored("--------------------- PERPLEXITY","yellow"),colored("(BIGRAM)","magenta"),colored("----------------------",'yellow'))
 print (colored("----------------------------------------------------------------",'yellow'))
 pp_bigram=obj_bi.perplexity_bigram()[0]
 pp_bigram_smth=obj_bi.perplexity_bigram()[1]
 if(pp_bigram=="ERROR"):
-    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
+    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu(və ya heç olmadığı) üçün üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
+    # print(colored("ERROR: Ehtimalı göstərilməyən ","red"))
     print(colored("PP(unsmoothed) =","green"),colored("ERROR","red"),colored("\nPP(smoothed) =","green"),colored(pp_bigram_smth,"green"))
 else:
     print(colored("PP(unsmoothed)=","green"),colored(pp_bigram,"green"),colored("\nPP(smoothed)=","green"),colored(pp_bigram_smth,"green"))

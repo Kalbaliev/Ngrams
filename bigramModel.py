@@ -51,7 +51,7 @@ class Bigram:
 
         self.bigram_word_prob_smth(self.bigram_test_frequency_pairs(),unigramModel.obj_uni.unigram_test_frequency_words())
         # self.bigram_word_prob(('<s>', 'BƏLİ'),'<s>')
-
+        self.perplexity_bigram()
 
 
 # There is Zero division problem for Test Data 1 but it is working in test data 2
@@ -62,10 +62,12 @@ class Bigram:
         counter=0
         for pair in pairs:
             self.bigram_numerator=self.bigram_fr.get(pair,0)
+    
             numerators.append(self.bigram_numerator)
         for word in words:
             if(counter<len(pairs)):
                 self.bigram_denominator=self.unigram_fr.get(word,0) 
+            
                 denominators.append(self.bigram_denominator)
                 counter+=1
 
@@ -73,9 +75,10 @@ class Bigram:
 
             for n,d in zip(numerators,denominators):
                     self.probability_of_bigram=n/d
+                   
                     self.probability_of_words_bigram*=self.probability_of_bigram
             print("1. Hesablama: Unsmoothed\nP =",self.probability_of_words_bigram)
-
+            return self.probability_of_words_bigram
         except ZeroDivisionError:
             
             print("1.Hesablama: \nBigram modelde adi ehtimalin hesablamasinda Test data sebebinden sifira bolme yoxdur")
@@ -100,6 +103,19 @@ class Bigram:
                 self.probability_of_words_bigram_smth*=self.probability_of_bigram
         
         print("2. Hesablama: Smoothed\nP =",self.probability_of_words_bigram_smth)
+        return self.probability_of_words_bigram_smth
 
+    def perplexity_bigram(self):
+       self.bigram_prob=self.bigram_word_prob(self.bigram_test_frequency_pairs(),unigramModel.obj_uni.unigram_test_frequency_words())
+       self.bigram_prob_smth=self.bigram_word_prob_smth(self.bigram_test_frequency_pairs(),unigramModel.obj_uni.unigram_test_frequency_words())
+       self.bigram_fr_count=len(self.bigram_test_frequency_pairs())
+       try:
+            self.pp_bigram=commonModul.math.pow(self.bigram_prob,(-1/self.bigram_fr_count))
+       except ValueError:
+           self.pp_bigram="ERROR"
+           print("Ehtimal sifira beraber oldugu ucun quvvete yukseldimesi mumkun deyil!")
+       self.pp_bigram_smth=int(commonModul.math.pow(self.bigram_prob_smth,(-1/self.bigram_fr_count)))
+       print("PP(unsmoothed)=",self.pp_bigram,"\nPP(smoothed)=",self.pp_bigram_smth)
+       
 obj_bi=Bigram()
      

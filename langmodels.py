@@ -101,9 +101,10 @@ class Bigram(Unigram):
         for word in self.words:
             for w,next_w in zip(word,word[1:]):
                 pair=(w,next_w)
-                self.pairs.append(pair)
+                yield pair
+                # self.pairs.append(pair)
         # yield self.pairs
-        return self.pairs
+        # return self.pairs
 
 
     def bigram_test_frequency_pairs(self):

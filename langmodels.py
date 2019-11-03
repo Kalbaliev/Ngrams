@@ -66,14 +66,14 @@ class Unigram:
     def perplexity_unigram(self):
        self.unigram_prob=self.unigram_word_prob() #prob
        self.unigram_prob_smth=self.unigram_word_prob_smth() #prob laplace
-       self.unigram_fr_count=len(self.test_words) #word size = -1/N deki N
+       self.test_sentence_corpus_length=len(self.test_words) #word size = -1/N deki N
       
        try:
-           self.pp_unigram=math.pow(self.unigram_prob,(-1/self.unigram_fr_count))
+           self.pp_unigram=math.pow(self.unigram_prob,(-1/self.test_sentence_corpus_length))
        except ValueError:
            self.pp_unigram="ERROR"
        
-       self.pp_unigram_smth=math.pow(self.unigram_prob_smth,(-1/self.unigram_fr_count))
+       self.pp_unigram_smth=math.pow(self.unigram_prob_smth,(-1/self.test_sentence_corpus_length))
        
        
        return self.pp_unigram,self.pp_unigram_smth # unsmth , smth
@@ -179,17 +179,17 @@ class Bigram(Unigram):
     def perplexity_bigram(self):
        self.bigram_prob=self.bigram_word_prob() #prob
        self.bigram_prob_smth=self.bigram_word_prob_smth() #prob laplace
-       self.bigram_fr_count=len(self.test_pairs) #pair size= -1/N deki N
+       self.test_sentence_corpus_length=len(self.test_pairs) #pair size= -1/N deki N
 
 
        try:
-           self.pp_bigram=math.pow(self.bigram_prob,(-1/self.bigram_fr_count))
+           self.pp_bigram=math.pow(self.bigram_prob,(-1/self.test_sentence_corpus_length))
            
        except (ValueError,TypeError):
            self.pp_bigram="ERROR"
 
        
-       self.pp_bigram_smth=math.pow(self.bigram_prob_smth,(-1/self.bigram_fr_count)) # 
+       self.pp_bigram_smth=math.pow(self.bigram_prob_smth,(-1/self.test_sentence_corpus_length)) # 
        
        
        return self.pp_bigram,self.pp_bigram_smth # unsmth , smth

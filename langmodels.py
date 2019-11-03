@@ -250,7 +250,7 @@ print (colored("----------------------------------------------------------------
 pp_bigram=obj_bi.perplexity_bigram()[0]
 pp_bigram_smth=obj_bi.perplexity_bigram()[1]
 if(pp_bigram=="ERROR"):
-    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu(və ya heç olmadığı) üçün üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
+    print(colored("ERROR: Ehtimal sıfıra bərabər olduğu(və ya heç olmadığı) üçün qüvvətə yüksəldilməsi (yəni kök alta salınması N-ci dərəcədən) mümkün deyil!","red"))
     # print(colored("ERROR: Ehtimalı göstərilməyən ","red"))
     print(colored("PP(unsmoothed) =","green"),colored("ERROR","red"),colored("\nPP(smoothed) =","green"),colored(pp_bigram_smth,"green"))
 else:
